@@ -8,6 +8,7 @@ Application Design
 
 As each player logs in, the server initiates an SSE response to their browser. Once all four player have joined they are initially placed at the four corners of the grid. The server also generates a random distribution of red, green and blue dots on the grid.
 On each keystroke the client sends an HTTP POST with the keystrokes represented by  the strings “UP”, “DOWN”, “LEFT” and “RIGHT.” On receiving a keystroke, the server broadcasts a new event to all clients giving the updated state of the game. Event data consists of a JSON object containing integer grid coordinates denoting the position of the remaining dots and, players’ scores and coordinates. Player and dot coordinates may appear in any order, but the game front-end may assume that they are valid (i.e. not negative or out of bounds)
+
 { 
  “DOTS”: [
    [“B”, x1, y1] , [“G”, x2, y2] ,  [“R”, x3, y3] , … 
@@ -17,6 +18,7 @@ On each keystroke the client sends an HTTP POST with the keystrokes represented 
    [“P3”, s3, xp3, yp3] , [“P4”, s4, xp4, yp4]
  ] 
 }
+
 On receiving a new event from the server, the client code must redraw the grid and update players’ scores. The server indicates the end of the game by sending an empty dots array and a player array containing the final scores.
 Implementation notes
 
