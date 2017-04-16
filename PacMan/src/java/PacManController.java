@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Kesara
  */
-@WebServlet(urlPatterns = {"/PacManController"})
+@WebServlet(urlPatterns = {"/pacman"})
 public class PacManController extends HttpServlet {
 
     private PacManGame game;
@@ -27,23 +27,32 @@ public class PacManController extends HttpServlet {
     @Override
     public void init() {
         game = new PacManGame(40, 40);
+        game.start();
         Logger.getGlobal().log(Level.INFO, "Game Started");
     }
-
-
+    
     @Override
-    protected void doGet(final HttpServletRequest request, final HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/event-stream");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/event-stream, charset=utf-8");
+        response.flushBuffer();
+        Logger.getGlobal().log(Level.INFO, "Beginning update stream.");
 
-        try (final PrintWriter out = response.getWriter()) {
-            
-            out.print("data: ");
-            out.println(game.getBoardJSON());
-                    
-        } catch (Exception ex) {
-            Logger.getGlobal().log(Level.INFO, "Exiting");
+        try (PrintWriter out = response.getWriter()) {
+            while (!Thread.interrupted())
+                synchronized (game) {
+                    game.wait();
+
+                    out.print("data: ");
+                    out.println(game.getBoardJSON());
+                    out.println();
+                    out.flush();
+                    System.out.println(game.getBoardJSON());
+                    Logger.getGlobal().log(Level.INFO, game.getBoardJSON());
+                }
+        } catch (InterruptedException e) {
+            Logger.getGlobal().log(Level.INFO, "Terminating updates.");
+            response.setStatus(HttpServletResponse.SC_GONE);
         }
     }
 

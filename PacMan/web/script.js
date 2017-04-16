@@ -3,17 +3,13 @@
 	Sample response
 	Your server response should be in this format to draw the canvas
 */
-var response = 
-{ 
-  "DOTS":   [
-                ["B", 5, 6] , ["G", 23, 12] ,  ["R", 34, 7], ["B", 25, 8] , ["G", 28, 1] ,  ["R", 42, 17],
-				["B", 15, 36] , ["G", 22, 22] ,  ["R", 5, 37], ["B", 25, 28] , ["G", 9, 39] ,  ["R", 10, 21] 
-            ] , 
- "PLAYERS": [ 
-                ["P1", 8, 0, 0] , ["P2", 5, 44, 0] , 
-                ["P3", -6, 0, 44] , ["P4", 10, 44, 44]
-            ] 
-};
+var response;
+
+source = new EventSource('pacman');
+
+source.onmessage = function(e) {
+    response = JSON.parse(e.data);
+    console.dir(e);
 
 /*Canvas stuff*/
 var canvas = $("#canvas");
@@ -154,6 +150,8 @@ function sendPlayerPosition(){
 		return;
 	} 
 }
+
+};
         
   
 

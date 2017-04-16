@@ -1,6 +1,8 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,7 +14,7 @@ import java.util.HashMap;
  *
  * @author Kesara
  */
-public class PacManGame {
+public class PacManGame extends Thread {
     private PacManBoard board;
     private ArrayList<PacManPlayer> players;
     
@@ -29,9 +31,33 @@ public class PacManGame {
 
     }
     
+    @Override
+    public void run() {
+        while (!Thread.interrupted())
+            try {
+                synchronized (this) {
+                    // Update game function
+                    notifyAll();
+                }
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Logger.getGlobal().log(Level.INFO, "Stock updates terminated!");
+                break;
+            }
+    }
+    
     public String getBoardJSON(){
         HashMap<Integer, Character> dots = board.getBoard();
-        String output = "JSON String";
+        String output = "{ \n" +
+                "  \"DOTS\":   [\n" +
+                " [\"B\", 5, 6] , [\"G\", 23, 12] ,  [\"R\", 34, 7], [\"B\", 25, 8] , [\"G\", 28, 1] ,  [\"R\", 42, 17],\n" +
+                " [\"B\", 15, 36] , [\"G\", 22, 22] ,  [\"R\", 5, 37], [\"B\", 25, 28] , [\"G\", 9, 39] ,  [\"R\", 10, 21] \n" +
+                " ] , \n" +
+                " \"PLAYERS\": [ \n" +
+                " [\"P1\", 8, 0, 0] , [\"P2\", 5, 44, 0] , \n" +
+                " [\"P3\", -6, 0, 44] , [\"P4\", 10, 44, 44]\n" +
+                " ] \n" +
+                " }";
         return output;
     }
 }
