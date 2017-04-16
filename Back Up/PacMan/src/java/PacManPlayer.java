@@ -45,10 +45,4 @@ public class PacManPlayer {
     public int getScore(){
         return score;
     }
-    
-    @Override
-    public String toString(){
-    
-        return "[\""+ name + "\", "+ score+ ", "+ x+ ", " + y + "]";
-    }
 }

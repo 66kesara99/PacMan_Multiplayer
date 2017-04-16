@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = {"/pacman"})
 public class PacManController extends HttpServlet {
 
-    private PacManGame game = new PacManGame(45, 45);
+    private PacManGame game = new PacManGame(40, 40);
 
     @Override
     public void init() {

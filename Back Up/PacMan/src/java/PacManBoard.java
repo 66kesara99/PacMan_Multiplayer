@@ -15,12 +15,11 @@ import java.util.Random;
 public class PacManBoard {
     private int width;
     private int height;
-    private HashMap<Integer, String> board;
+    private HashMap<Integer, Character> board;
     
     public PacManBoard (int width, int height){
         this.width = width;
         this.height = height;
-        board = new HashMap<Integer, String>();
     }
     
     public int getHeight(){
@@ -41,13 +40,13 @@ public class PacManBoard {
                 // If col == 0 board is empty
                 switch (col) {
                     case 1:
-                        board.put(j*width+i, "\"R\"");
+                        board.put(j*width+i, 'R');
                         break;
                     case 2:
-                        board.put(j*width+i, "\"G\"");
+                        board.put(j*width+i, 'G');
                         break;
                     case 3:
-                        board.put(j*width+i, "\"B\"");
+                        board.put(j*width+i, 'B');
                         break;
                     default:
                         break;
@@ -57,8 +56,7 @@ public class PacManBoard {
         
     }
     
-    public HashMap<Integer, String> getBoard(){
+    public HashMap<Integer, Character> getBoard(){
         return board;
     }
-   
 }

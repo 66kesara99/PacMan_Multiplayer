@@ -3,6 +3,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonWriter;
+import java.io.StringWriter;
+import java.util.Arrays;
+
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,6 +29,7 @@ public class PacManGame extends Thread {
     public PacManGame(int boardWidth, int boardHeight){
         
         board = new PacManBoard(boardWidth, boardHeight);
+        board.generateBoard();
         
         players = new ArrayList<>();
         players.add(new PacManPlayer("P1", 0, 0));
@@ -47,7 +56,17 @@ public class PacManGame extends Thread {
     }
     
     public String getBoardJSON(){
-        HashMap<Integer, Character> dots = board.getBoard();
+        HashMap<Integer, String> dots = board.getBoard();
+        
+        String dotResult = dotsToJSONFormat(dots);
+        System.out.println(dotResult);
+        
+//        for (PacManPlayer p : players){
+//            System.out.println(p);
+//        }
+        
+        
+        
         String output = "{" +
                 "  \"DOTS\":   [" +
                 " [\"B\", 5, 6] , [\"G\", 23, 12] ,  [\"R\", 34, 7], [\"B\", 25, 8] , [\"G\", 28, 1] ,  [\"R\", 42, 17]," +
@@ -58,6 +77,58 @@ public class PacManGame extends Thread {
                 " [\"P3\", -6, 0, 44] , [\"P4\", 10, 44, 44]" +
                 " ] " +
                 " }";
+        
+//        JsonObject model;
+//        model = Json.createObjectBuilder()
+//                .add("PLAYERS", Json.createArrayBuilder().add(Json.createArrayBuilder().add(players.get(0)))).build();
+//        StringWriter strWriter = new StringWriter();
+//        JsonWriter jsonWriter = Json.createWriter(strWriter);
+//        jsonWriter.writeObject(model);
+//        jsonWriter.close();
+
+//        String jsonData = strWriter.toString();
+//        System.out.println(jsonData);
+        
+//        return output;
+          return dotResult;
+    }
+    
+    public String dotsToJSONFormat(HashMap<Integer, String> dots){
+        
+        ArrayList <String> dotArray = new ArrayList();
+        
+        for(Integer key : dots.keySet()){
+        
+            ArrayList <String> dotData = new ArrayList();
+            
+            String colour = dots.get(key);
+            int x = key % board.getWidth();
+            int y = key / board.getWidth();
+            
+            dotData.add(colour);
+            dotData.add(Integer.toString(x));
+            dotData.add(Integer.toString(y));
+            
+            String dot = String.join(", ", dotData);
+//            System.out.println(dot);
+            StringBuffer bf = new StringBuffer("[");
+            bf.append(dot);
+            bf.append("]");
+            dotArray.add(bf.toString());
+            
+        }
+        
+        String dotData = String.join(",", dotArray);
+        
+        // Insert player data from players array
+        String playerData =
+                " [\"P1\", 8, 0, 0] , [\"P2\", 5, 44, 0] , " +
+                " [\"P3\", -6, 0, 44] , [\"P4\", 10, 44, 44]";
+        
+        
+        String output = "{ \"DOTS\": [" + dotData + " ], \"PLAYERS\": [ " + playerData + "] }";
+        
         return output;
+    
     }
 }
