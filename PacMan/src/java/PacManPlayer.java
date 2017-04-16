@@ -48,7 +48,17 @@ public class PacManPlayer {
     
     @Override
     public String toString(){
-    
-        return "[\""+ name + "\", "+ score+ ", "+ x+ ", " + y + "]";
+        
+        StringBuffer bf = new StringBuffer("[\"");
+        bf.append(name);
+        bf.append("\", ");
+        bf.append(Integer.toString(score));
+        bf.append(", ");
+        bf.append(Integer.toString(x));
+        bf.append(", ");
+        bf.append(Integer.toString(y));
+        bf.append("]");
+        
+        return bf.toString();
     }
 }

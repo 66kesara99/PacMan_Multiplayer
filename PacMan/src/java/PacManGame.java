@@ -58,12 +58,9 @@ public class PacManGame extends Thread {
     public String getBoardJSON(){
         HashMap<Integer, String> dots = board.getBoard();
         
-        String dotResult = dotsToJSONFormat(dots);
-        System.out.println(dotResult);
-        
-//        for (PacManPlayer p : players){
-//            System.out.println(p);
-//        }
+        String result = convertToJSONFormat(dots);
+        System.out.println(result);
+       
         
         
         
@@ -90,10 +87,10 @@ public class PacManGame extends Thread {
 //        System.out.println(jsonData);
         
 //        return output;
-          return dotResult;
+          return result;
     }
     
-    public String dotsToJSONFormat(HashMap<Integer, String> dots){
+    public String convertToJSONFormat(HashMap<Integer, String> dots){
         
         ArrayList <String> dotArray = new ArrayList();
         
@@ -121,9 +118,16 @@ public class PacManGame extends Thread {
         String dotData = String.join(",", dotArray);
         
         // Insert player data from players array
-        String playerData =
-                " [\"P1\", 8, 0, 0] , [\"P2\", 5, 44, 0] , " +
-                " [\"P3\", -6, 0, 44] , [\"P4\", 10, 44, 44]";
+//        String playerData =
+//                " [\"P1\", 8, 0, 0] , [\"P2\", 5, 44, 0] , " +
+//                " [\"P3\", -6, 0, 44] , [\"P4\", 10, 44, 44]";
+        
+        ArrayList <String> pData = new ArrayList();
+        for (PacManPlayer p : players){
+            pData.add(p.toString());
+        }
+        
+        String playerData = String.join(",", pData);
         
         
         String output = "{ \"DOTS\": [" + dotData + " ], \"PLAYERS\": [ " + playerData + "] }";
