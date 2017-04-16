@@ -22,11 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(urlPatterns = {"/pacman"})
 public class PacManController extends HttpServlet {
 
-    private PacManGame game;
+    private PacManGame game = new PacManGame(40, 40);
 
     @Override
     public void init() {
-        game = new PacManGame(40, 40);
         game.start();
         Logger.getGlobal().log(Level.INFO, "Game Started");
     }
@@ -47,8 +46,8 @@ public class PacManController extends HttpServlet {
                     out.println(game.getBoardJSON());
                     out.println();
                     out.flush();
-                    System.out.println(game.getBoardJSON());
-                    Logger.getGlobal().log(Level.INFO, game.getBoardJSON());
+//                    System.out.println(game.getBoardJSON());
+//                    Logger.getGlobal().log(Level.INFO, game.getBoardJSON());
                 }
         } catch (InterruptedException e) {
             Logger.getGlobal().log(Level.INFO, "Terminating updates.");
