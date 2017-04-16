@@ -1,0 +1,47 @@
+body {
+	margin: 40px auto;
+	max-width: 650px;
+	line-height: 1.2;
+	font-size: 18px;
+	color: #444;
+	padding: 0 10px;
+}
+
+form {
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+form div + div {
+  margin-top: 1em;
+}
+
+label {
+  width: 300px;
+  display: inline-block;
+  text-align: right;
+}
+
+input, textarea {
+  width: 300px;
+  box-sizing: border-box;
+  border: 1px solid #999;
+}
+
+input:focus, textarea:focus {
+  border-color: #000;
+}
+
+textarea {
+  vertical-align: top;
+  height: 5em;
+}
+
+.button {
+  padding-left: 90px; /* same size as the label elements */
+}
+
+button {
+  margin-left: .5em;
+}

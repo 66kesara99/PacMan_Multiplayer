@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-Player Pac-Man</title>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Lets make a simple player game -->
+<canvas id="canvas" width="450" height="450" ></canvas>
+<form>
+    <input type="hidden" id="keypress" name="keypress">
+</form>
+
+    <table id="score">
+        <tr>
+            <th>Player</th>
+            <th>Score</th>
+        </tr>
+        <tr>
+            <td class="P1"></td>
+            <td class="ScoreP1"></td>
+        </tr>
+        <tr>
+             <td class="P2"></td>
+            <td class="ScoreP2"></td>
+        </tr>
+        <tr>
+            <td class="P3"></td>
+            <td class="ScoreP3"></td>
+        </tr>
+        <tr>
+            <td class="P4"></td>
+            <td class="ScoreP4"></td>
+        </tr>
+    </table>
+    
+<script src="script.js"></script>
+
+</body>
+</html>
