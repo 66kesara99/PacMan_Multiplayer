@@ -1,6 +1,7 @@
 # PacMan_Multiplayer
 
 CO324 Course Project
+
 You will develop a multiplayer game similar to PacMan. Play begins once four players have joined in. They score points by collecting coloured dots on a 10x10 grid. Red, green and blue dots count for one, two and, four points respectively. When two players collide they lose three points each. The game ends when all dots on the board have been collected.
 Players move their characters on a two dimensional grid using arrow keys. You will be provided most of the client JavaScript code for game play. Your will design and code the backend logic to maintain the current state of the game. Game state consists of the coordinates of remaining coloured dots and each player’s location and score
 Application Design
