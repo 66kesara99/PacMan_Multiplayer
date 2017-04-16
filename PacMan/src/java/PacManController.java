@@ -43,7 +43,7 @@ public class PacManController extends HttpServlet {
                     game.wait();
 
                     out.print("data: ");
-                    out.println(game.getBoardJSON());
+                    out.println(game.getBoardState());
                     out.println();
                     out.flush();
 //                    System.out.println(game.getBoardJSON());
