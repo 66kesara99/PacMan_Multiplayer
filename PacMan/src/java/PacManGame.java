@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 public class PacManGame extends Thread {
     private PacManBoard board;
     private ArrayList<PacManPlayer> players;
+    private PacManPlayer p1, p2, p3, p4;
+    private boolean pressed = false;
     
     public PacManGame(int boardWidth, int boardHeight){
         
@@ -24,27 +26,46 @@ public class PacManGame extends Thread {
         board.generateBoard();
         
         players = new ArrayList<>();
-        players.add(new PacManPlayer("P1", 0, 0));
-        players.add(new PacManPlayer("P2", boardWidth-1, 0));
-        players.add(new PacManPlayer("P3", 0, boardHeight-1));
-        players.add(new PacManPlayer("P4", boardWidth-1, boardHeight-1));
-        
-
+        p1 = new PacManPlayer("P1", 0, 0);
+        p2 = new PacManPlayer("P2", boardWidth-1, 0);
+        p3 = new PacManPlayer("P3", 0, boardHeight-1);
+        p4 = new PacManPlayer("P4", boardWidth-1, boardHeight-1);
+        players.add(p1);
+        players.add(p2);
+        players.add(p3);
+        players.add(p4);
     }
     
-    @Override
-    public void run() {
-        while (!Thread.interrupted())
-            try {
-                synchronized (this) {
-                    // Update game function
-                    notifyAll();
-                }
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Logger.getGlobal().log(Level.INFO, "Stock updates terminated!");
-                break;
-            }
+//    @Override
+//    public void run() {
+//        while (!Thread.interrupted())
+//            try {
+//                synchronized (this) {
+//                    // Update game function
+//                    notifyAll();
+//                    pressed = false;
+//                }
+//                while (pressed == false){}
+////                    Thread.sleep(1);
+//            } catch (Exception e) {
+//                Logger.getGlobal().log(Level.INFO, "Stock updates terminated!");
+//                break;
+//            }
+//    }
+    
+    public boolean isColide(PacManPlayer a, PacManPlayer b){
+        return a.getX() == b.getX() && a.getY() == b.getY();
+    }
+    
+    public char eatFood(PacManPlayer player){
+        return board.removeDot(player.getX(), player.getY());
+    }
+    
+    public void keyPress(char direction){
+        pressed = true;
+        p1.move(direction, board.getWidth(), board.getHeight());
+        char color = eatFood(p1);
+        p1.updateScore(color);
     }
     
     public String getBoardState(){
@@ -89,7 +110,7 @@ public class PacManGame extends Thread {
         // Generatin JSON format
         String output = "{ \"DOTS\": [" + dotData + " ], \"PLAYERS\": [ " + playerData + "] }";
         
-        System.out.println(output);
+        // System.out.println(output);
         
         return output;
      

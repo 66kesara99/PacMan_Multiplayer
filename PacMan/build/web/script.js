@@ -9,7 +9,7 @@ source = new EventSource('pacman');
 
 source.onmessage = function(e) {
     response = JSON.parse(e.data);
-    console.dir(e);
+//    console.dir(e);
 
 /*Canvas stuff*/
 var canvas = $("#canvas");
@@ -131,20 +131,40 @@ function updateScoreboard(id, score){
 } 
 
 //Lets add the keyboard controls now
+//
 $(document).keydown(function (e) {
 	var key = e.which;             
 	document.getElementById("keypress").value = key;
 	sendPlayerPosition();
 
-});         
+}); 
+//var down = {};
+//
+//$(document).keydown(function(event){
+//     var keycode = (event.keyCode ? event.keyCode : event.which);
+//     document.getElementById("keypress").value = keycode;
+////     if(keycode == '39'){
+//          if (down[keycode] == null) { // first press
+//              down[keycode] = true; // record that the key's down
+//              sendPlayerPosition();
+//          }
+//     } 
+//   );
+//
+//$(document).keyup(function(event) {
+//     var keycode = (event.keyCode ? event.keyCode : event.which);
+//     console.log("keyup");
+//     down[keycode] = null;
+//});         
                
 // TODO Send Keystroke to server			   
 function sendPlayerPosition(){    
 	if(true){
 		var xmlhttprequest = new XMLHttpRequest();        
 		var keypress = document.getElementById("keypress").value;
-		//send keystroke to servlet
-		xmlhttprequest.open("POST","UpdateGame?keypress=" + keypress,true);
+		//send keystroke to servlet'
+                console.log(keypress);
+		xmlhttprequest.open("POST","update?keypress=" + keypress,true);
 		xmlhttprequest.send();
 	}else{ 
 		return;

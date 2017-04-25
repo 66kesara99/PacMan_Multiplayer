@@ -20,7 +20,7 @@ public class PacManBoard {
     public PacManBoard (int width, int height){
         this.width = width;
         this.height = height;
-        board = new HashMap<Integer, String>();
+        board = new HashMap<>();
     }
     
     public int getHeight(){
@@ -29,6 +29,22 @@ public class PacManBoard {
     
     public int getWidth(){
         return width;
+    }
+    
+    public char removeDot(int x, int y){
+        int key = y*width+x;
+        char colour = 0;
+        if (board.containsKey(key)){
+            String val = board.get(key);
+            if (val.equals("\"R\""))
+                colour = 'R';
+            else if (val.equals("\"G\""))
+                colour = 'G';
+            else if (val.equals("\"B\""))
+                colour = 'B';
+            board.remove(key);
+        }
+        return colour;
     }
     
     public void generateBoard(){

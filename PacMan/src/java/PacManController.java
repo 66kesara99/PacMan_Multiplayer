@@ -19,14 +19,14 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Kesara
  */
-@WebServlet(urlPatterns = {"/pacman"})
+@WebServlet(urlPatterns = {"/pacman","/update"})
 public class PacManController extends HttpServlet {
 
     private PacManGame game = new PacManGame(45, 45);
 
     @Override
     public void init() {
-        game.start();
+//        game.start();
         Logger.getGlobal().log(Level.INFO, "Game Started");
     }
     
@@ -38,6 +38,12 @@ public class PacManController extends HttpServlet {
         Logger.getGlobal().log(Level.INFO, "Beginning update stream.");
 
         try (PrintWriter out = response.getWriter()) {
+
+            out.print("data: ");
+            out.println(game.getBoardState());
+            out.println();
+            out.flush();
+            
             while (!Thread.interrupted())
                 synchronized (game) {
                     game.wait();
@@ -52,6 +58,37 @@ public class PacManController extends HttpServlet {
         } catch (InterruptedException e) {
             Logger.getGlobal().log(Level.INFO, "Terminating updates.");
             response.setStatus(HttpServletResponse.SC_GONE);
+        }
+    }
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        if(request.getServletPath().equals("/update")){
+            int key = Integer.parseInt(request.getParameter("keypress"));
+            
+            synchronized(game){
+            switch (key){
+                case (37):
+                    game.keyPress('L');
+                    game.notifyAll();
+                    break;
+                case (38):
+                    game.keyPress('U');
+//                    game.notifyAll();
+                    break;
+                case (39):
+                    game.keyPress('R');
+//                    game.notifyAll();
+                    break;
+                case (40):
+                    game.keyPress('D');
+//                    game.notifyAll();
+                    break;
+                default:
+                    break;
+            }
+            }
         }
     }
 
