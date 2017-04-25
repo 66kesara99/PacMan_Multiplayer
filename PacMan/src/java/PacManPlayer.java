@@ -54,7 +54,7 @@ public class PacManPlayer {
         switch (direction){
             case 'U':
                 y--;
-                if (y<0) y = height;
+                if (y<0) y = height-1;
                 break;
             case 'D':
                 y++;
@@ -66,7 +66,7 @@ public class PacManPlayer {
                 break;
             case 'L':
                 x--;
-                if (x<0) x = width;
+                if (x<0) x = width-1;
                 break;
             default :
                 break;

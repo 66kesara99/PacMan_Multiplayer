@@ -14,11 +14,10 @@ import java.util.logging.Logger;
  *
  * @author Kesara
  */
-public class PacManGame extends Thread {
+public class PacManGame {
     private PacManBoard board;
     private ArrayList<PacManPlayer> players;
     private PacManPlayer p1, p2, p3, p4;
-    private boolean pressed = false;
     
     public PacManGame(int boardWidth, int boardHeight){
         
@@ -36,23 +35,6 @@ public class PacManGame extends Thread {
         players.add(p4);
     }
     
-//    @Override
-//    public void run() {
-//        while (!Thread.interrupted())
-//            try {
-//                synchronized (this) {
-//                    // Update game function
-//                    notifyAll();
-//                    pressed = false;
-//                }
-//                while (pressed == false){}
-////                    Thread.sleep(1);
-//            } catch (Exception e) {
-//                Logger.getGlobal().log(Level.INFO, "Stock updates terminated!");
-//                break;
-//            }
-//    }
-    
     public boolean isColide(PacManPlayer a, PacManPlayer b){
         return a.getX() == b.getX() && a.getY() == b.getY();
     }
@@ -61,9 +43,17 @@ public class PacManGame extends Thread {
         return board.removeDot(player.getX(), player.getY());
     }
     
-    public void keyPress(char direction){
-        pressed = true;
+    public void keyPress(PacManPlayer player, char direction){
         p1.move(direction, board.getWidth(), board.getHeight());
+        
+        for (PacManPlayer p: players){
+            if (!(p1.getName().equals(p.getName())) && isColide(p1,p)){
+                p1.reset();
+                p1.updateScore('C');
+                p.reset();
+                p.updateScore('C');
+            }
+        }
         char color = eatFood(p1);
         p1.updateScore(color);
     }

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PacManController extends HttpServlet {
 
     private PacManGame game = new PacManGame(45, 45);
+    private PacManPlayer player;
 
     @Override
     public void init() {
@@ -38,18 +39,21 @@ public class PacManController extends HttpServlet {
         Logger.getGlobal().log(Level.INFO, "Beginning update stream.");
 
         try (PrintWriter out = response.getWriter()) {
+            
 
             out.print("data: ");
             out.println(game.getBoardState());
+            
             out.println();
             out.flush();
             
             while (!Thread.interrupted())
-                synchronized (game) {
-                    game.wait();
+                synchronized (this) {
+                    wait();
 
                     out.print("data: ");
                     out.println(game.getBoardState());
+//                    out.println(test);
                     out.println();
                     out.flush();
 //                    System.out.println(game.getBoardJSON());
@@ -67,27 +71,24 @@ public class PacManController extends HttpServlet {
         if(request.getServletPath().equals("/update")){
             int key = Integer.parseInt(request.getParameter("keypress"));
             
-            synchronized(game){
-            switch (key){
-                case (37):
-                    game.keyPress('L');
-                    game.notifyAll();
-                    break;
-                case (38):
-                    game.keyPress('U');
-//                    game.notifyAll();
-                    break;
-                case (39):
-                    game.keyPress('R');
-//                    game.notifyAll();
-                    break;
-                case (40):
-                    game.keyPress('D');
-//                    game.notifyAll();
-                    break;
-                default:
-                    break;
-            }
+            synchronized(this){
+                switch (key) {
+                    case 37:
+                        game.keyPress(player, 'L');
+                        break;
+                    case 38:
+                        game.keyPress(player, 'U');
+                        break;
+                    case 39:
+                        game.keyPress(player, 'R');
+                        break;
+                    case 40:
+                        game.keyPress(player, 'D');
+                        break;
+                    default:
+                        break;
+                }
+                notifyAll();
             }
         }
     }
