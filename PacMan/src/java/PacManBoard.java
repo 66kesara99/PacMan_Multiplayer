@@ -53,7 +53,7 @@ public class PacManBoard {
             for (int j = 0; j<height; j++){
                 
                 Random rand = new Random();
-                int col = rand.nextInt()%4;
+                int col = rand.nextInt(4);
                 
                 // Keeping 4 corners of the board empty (Initial positions of the players)
                 if((i == 0 && j == 0)|| (i == 0 && j == height-1)|| (i == width-1 && j == 0)||(i == width-1 && j == height-1)){

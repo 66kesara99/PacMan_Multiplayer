@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,25 +36,53 @@ public class PacManGame {
         players.add(p4);
     }
     
-    public boolean isColide(PacManPlayer a, PacManPlayer b){
-        return a.getX() == b.getX() && a.getY() == b.getY();
+    public boolean isCollide(PacManPlayer a, PacManPlayer b){
+        return (a.getX() == b.getX() && a.getY() == b.getY());
+    }
+   
+    
+    public PacManPlayer whoCollide(PacManPlayer player){
+        for (PacManPlayer p: players){
+            if (!(player.getName().equals(p.getName())) && isCollide(player, p)){
+                return p;
+            }
+        }
+        return null;
+    }
+    
+    public void checkCollide(PacManPlayer player){
+        
+        while (whoCollide(player) != null){
+            PacManPlayer p = whoCollide(player);
+
+            while (isCollide(player, p)){
+                Random rand = new Random();
+                int x1 = rand.nextInt(board.getWidth());
+                int y1 = rand.nextInt(board.getHeight());
+                p.setPosition(x1, y1);
+//                System.out.println("p1: "+x1+" "+y1);
+
+                int x2 = rand.nextInt(board.getWidth());
+                int y2 = rand.nextInt(board.getHeight());
+                player.setPosition(x2, y2);
+//                System.out.println("p2: "+x2+" "+y2);
+
+            }
+
+        }
     }
     
     public char eatFood(PacManPlayer player){
         return board.removeDot(player.getX(), player.getY());
     }
     
+    
+    
     public void keyPress(PacManPlayer player, char direction){
         p1.move(direction, board.getWidth(), board.getHeight());
         
-        for (PacManPlayer p: players){
-            if (!(p1.getName().equals(p.getName())) && isColide(p1,p)){
-                p1.reset();
-                p1.updateScore('C');
-                p.reset();
-                p.updateScore('C');
-            }
-        }
+        checkCollide(p1);
+        
         char color = eatFood(p1);
         p1.updateScore(color);
     }
@@ -80,7 +109,7 @@ public class PacManGame {
             
             String dot = String.join(", ", dotData);
 
-            StringBuffer bf = new StringBuffer("[");
+            StringBuilder bf = new StringBuilder("[");
             bf.append(dot);
             bf.append("]");
             dotArray.add(bf.toString());

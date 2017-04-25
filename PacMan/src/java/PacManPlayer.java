@@ -13,16 +13,13 @@ public class PacManPlayer {
     private int score;
     private int x;
     private int y;
-    private int initialX;
-    private int initialY;
     
     public PacManPlayer (String name, int x, int y){
         this.name = name;
         this.score = 0;
         this.x = x;
-        this.initialX = x;
         this.y = y;
-        this.initialY = y;
+        
     }
     
     public void setPosition(int x, int y){
@@ -86,16 +83,10 @@ public class PacManPlayer {
                 break;
             case 'C':
                 score -= 3;
-                reset();
                 break;
             default:
                 break;
         }
-    }
-    
-    public void reset(){
-        x = initialX;
-        y = initialY;
     }
 
     
