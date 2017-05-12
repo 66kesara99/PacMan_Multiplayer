@@ -17,23 +17,17 @@ import java.util.logging.Logger;
  */
 public class PacManGame {
     private PacManBoard board;
-    private ArrayList<PacManPlayer> players;
-    private PacManPlayer p1, p2, p3, p4;
+    private PacManPlayer[] players = new PacManPlayer[4];
     
     public PacManGame(int boardWidth, int boardHeight){
         
         board = new PacManBoard(boardWidth, boardHeight);
         board.generateBoard();
-        
-        players = new ArrayList<>();
-        p1 = new PacManPlayer("P1", 0, 0);
-        p2 = new PacManPlayer("P2", boardWidth-1, 0);
-        p3 = new PacManPlayer("P3", 0, boardHeight-1);
-        p4 = new PacManPlayer("P4", boardWidth-1, boardHeight-1);
-        players.add(p1);
-        players.add(p2);
-        players.add(p3);
-        players.add(p4);
+
+        players[0] = new PacManPlayer("P1", 0, 0);
+        players[1] = new PacManPlayer("P2", boardWidth-1, 0);
+        players[2] = new PacManPlayer("P3", 0, boardHeight-1);
+        players[3] = new PacManPlayer("P4", boardWidth-1, boardHeight-1);
     }
     
     public boolean isCollide(PacManPlayer a, PacManPlayer b){
@@ -60,11 +54,13 @@ public class PacManGame {
                 int x1 = rand.nextInt(board.getWidth());
                 int y1 = rand.nextInt(board.getHeight());
                 p.setPosition(x1, y1);
+                p.updateScore('C');
 //                System.out.println("p1: "+x1+" "+y1);
 
                 int x2 = rand.nextInt(board.getWidth());
                 int y2 = rand.nextInt(board.getHeight());
                 player.setPosition(x2, y2);
+                player.updateScore('C');
 //                System.out.println("p2: "+x2+" "+y2);
 
             }
@@ -78,16 +74,18 @@ public class PacManGame {
     
     
     
-    public void keyPress(PacManPlayer player, char direction){
-        p1.move(direction, board.getWidth(), board.getHeight());
+    public void keyPress(int playerId, char direction){
         
-        checkCollide(p1);
         
-        char color = eatFood(p1);
-        p1.updateScore(color);
+        players[playerId].move(direction, board.getWidth(), board.getHeight());
+        
+        checkCollide(players[playerId]);
+        
+        char color = eatFood(players[playerId]);
+        players[playerId].updateScore(color);
     }
     
-    public String getBoardState(){
+    public String getBoardState(int playerCount){
         
         HashMap<Integer, String> dots = board.getBoard();
         
@@ -120,8 +118,8 @@ public class PacManGame {
         
         // Inserting player data to playerArray in given format
         ArrayList <String> playerArray = new ArrayList();
-        for (PacManPlayer p : players){
-            playerArray.add(p.toString());
+        for (int i = 0; i<playerCount; i++){
+            playerArray.add(players[i].toString());
         }
         
         String playerData = String.join(",", playerArray);

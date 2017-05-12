@@ -47,6 +47,16 @@ public class PacManPlayer {
         return score;
     }
     
+//    public int getPlayerId(PacManPlayer players[], PacManPlayer player){
+//        for (int i = 0; i<players.length; i++){
+//            if (player.getName().equals(players[i].getName())){
+//                return i;
+//            }
+//        }
+//        
+//        return -1;
+//    }
+    
     public void move(char direction, int width, int height){
         switch (direction){
             case 'U':

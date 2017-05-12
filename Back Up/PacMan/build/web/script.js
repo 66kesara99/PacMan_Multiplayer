@@ -9,7 +9,7 @@ source = new EventSource('pacman');
 
 source.onmessage = function(e) {
     response = JSON.parse(e.data);
-    console.dir(e);
+//    console.dir(e);
 
 /*Canvas stuff*/
 var canvas = $("#canvas");
@@ -67,6 +67,7 @@ function paint() {
 }
 
 paint();
+
 
 /*Function to paint players*/
 function paint_player(type, x, y ) {
@@ -129,11 +130,13 @@ function updateScoreboard(id, score){
 	$(scoreId).text(id);
 	$(scoreValue).text(score);
 } 
-
+};
+     
 //Lets add the keyboard controls now
 $(document).keydown(function (e) {
 	var key = e.which;             
 	document.getElementById("keypress").value = key;
+        console.log(key);
 	sendPlayerPosition();
 
 });         
@@ -144,14 +147,14 @@ function sendPlayerPosition(){
 		var xmlhttprequest = new XMLHttpRequest();        
 		var keypress = document.getElementById("keypress").value;
 		//send keystroke to servlet
-		xmlhttprequest.open("POST","UpdateGame?keypress=" + keypress,true);
+		xmlhttprequest.open("POST","update?keypress=" + keypress,true);
 		xmlhttprequest.send();
 	}else{ 
 		return;
 	} 
 }
 
-};
+
         
   
 

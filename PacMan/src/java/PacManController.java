@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -23,11 +24,12 @@ import javax.servlet.http.HttpServletResponse;
 public class PacManController extends HttpServlet {
 
     private PacManGame game = new PacManGame(45, 45);
-    private PacManPlayer player;
+    private int playerCount;
 
     @Override
     public void init() {
 //        game.start();
+        playerCount = 0;
         Logger.getGlobal().log(Level.INFO, "Game Started");
     }
     
@@ -37,27 +39,42 @@ public class PacManController extends HttpServlet {
         response.setContentType("text/event-stream, charset=utf-8");
         response.flushBuffer();
         Logger.getGlobal().log(Level.INFO, "Beginning update stream.");
+        
 
         try (PrintWriter out = response.getWriter()) {
             
-
             out.print("data: ");
-            out.println(game.getBoardState());
-            
+            out.println(game.getBoardState(playerCount));
             out.println();
             out.flush();
             
-            while (!Thread.interrupted())
+            HttpSession sess = request.getSession(true);        // Get the existing session
+        
+            // Get addressbook inside the session
+            Integer playerId = (Integer) sess.getAttribute("playerId");
+
+            // Create new session if the session is new
+            if (playerId == null && playerCount < 4){
+                playerCount++;
+                System.out.println(playerCount);
+                synchronized(sess){
+                    sess.setAttribute("playerId", playerCount);
+                }
+            }
+            
+            while (!Thread.interrupted()){
                 synchronized (this) {
                     wait();
+                }
 
-                    out.print("data: ");
-                    out.println(game.getBoardState());
-                    out.println();
-                    out.flush();
+                out.print("data: ");
+                out.println(game.getBoardState(playerCount));
+                out.println();
+
+                out.flush();
 //                    System.out.println(game.getBoardJSON());
 //                    Logger.getGlobal().log(Level.INFO, game.getBoardJSON());
-                }
+            }
         } catch (InterruptedException e) {
             Logger.getGlobal().log(Level.INFO, "Terminating updates.");
             response.setStatus(HttpServletResponse.SC_GONE);
@@ -70,22 +87,32 @@ public class PacManController extends HttpServlet {
         if(request.getServletPath().equals("/update")){
             int key = Integer.parseInt(request.getParameter("keypress"));
             
+            //process request parameters and return details of searched name
+        
+            HttpSession sess = request.getSession(true);        // Get the existing session
+        
+            // Get player id inside the session
+            Integer playerId = (Integer) sess.getAttribute("playerId") - 1;
+            
             synchronized(this){
-                switch (key) {
-                    case 37:
-                        game.keyPress(player, 'L');
-                        break;
-                    case 38:
-                        game.keyPress(player, 'U');
-                        break;
-                    case 39:
-                        game.keyPress(player, 'R');
-                        break;
-                    case 40:
-                        game.keyPress(player, 'D');
-                        break;
-                    default:
-                        break;
+                
+                if (playerCount > 3){
+                    switch (key) {
+                        case 37:
+                            game.keyPress(playerId, 'L');
+                            break;
+                        case 38:
+                            game.keyPress(playerId, 'U');
+                            break;
+                        case 39:
+                            game.keyPress(playerId, 'R');
+                            break;
+                        case 40:
+                            game.keyPress(playerId, 'D');
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 notifyAll();
             }

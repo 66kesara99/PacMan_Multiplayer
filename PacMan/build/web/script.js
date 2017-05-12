@@ -5,11 +5,27 @@
 */
 var response;
 
+var halt = false;
+
 source = new EventSource('pacman');
+
 
 source.onmessage = function(e) {
     response = JSON.parse(e.data);
 //    console.dir(e);
+
+
+var playerCount = response.PLAYERS.length;
+var remPlayers = 4 - playerCount;
+if(playerCount  === 4){
+        halt = false;
+        $("#message").html("PLAY NOW!!!!");
+    }
+    else{
+        
+        $("#message").html("Press any key and Wait till other "+ remPlayers + " players join");
+    }
+
 
 /*Canvas stuff*/
 var canvas = $("#canvas");
@@ -136,14 +152,14 @@ function updateScoreboard(id, score){
 $(document).keydown(function (e) {
 	var key = e.which;             
 	document.getElementById("keypress").value = key;
-        console.log(key);
+//        console.log(key);
 	sendPlayerPosition();
 
 });         
                
 // TODO Send Keystroke to server			   
 function sendPlayerPosition(){    
-	if(true){
+	if(!halt){
 		var xmlhttprequest = new XMLHttpRequest();        
 		var keypress = document.getElementById("keypress").value;
 		//send keystroke to servlet

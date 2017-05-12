@@ -19,6 +19,7 @@ public class PacManPlayer {
         this.score = 0;
         this.x = x;
         this.y = y;
+        
     }
     
     public void setPosition(int x, int y){
@@ -44,5 +45,64 @@ public class PacManPlayer {
     
     public int getScore(){
         return score;
+    }
+    
+    public void move(char direction, int width, int height){
+        switch (direction){
+            case 'U':
+                y--;
+                if (y<0) y = height-1;
+                break;
+            case 'D':
+                y++;
+                y = y%height;
+                break;
+            case 'R':
+                x++;
+                x = x%width;
+                break;
+            case 'L':
+                x--;
+                if (x<0) x = width-1;
+                break;
+            default :
+                break;
+        }                
+    }
+    
+    public void updateScore(char update){
+        switch (update){
+            case 'R':
+                score += 1;
+                break;
+            case 'G':
+                score += 2;
+                break;
+            case 'B':
+                score += 4;
+                break;
+            case 'C':
+                score -= 3;
+                break;
+            default:
+                break;
+        }
+    }
+
+    
+    @Override
+    public String toString(){
+        
+        StringBuffer bf = new StringBuffer("[\"");
+        bf.append(name);
+        bf.append("\", ");
+        bf.append(Integer.toString(score));
+        bf.append(", ");
+        bf.append(Integer.toString(x));
+        bf.append(", ");
+        bf.append(Integer.toString(y));
+        bf.append("]");
+        
+        return bf.toString();
     }
 }
