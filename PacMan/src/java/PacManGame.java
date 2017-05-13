@@ -15,12 +15,17 @@ import java.util.logging.Logger;
  *
  * @author Kesara
  */
+
+// Class to Game Backend
 public class PacManGame {
+    
     private PacManBoard board;
     private PacManPlayer[] players = new PacManPlayer[4];
     
+    
     public PacManGame(int boardWidth, int boardHeight){
         
+        // Initialize the board
         board = new PacManBoard(boardWidth, boardHeight);
         board.generateBoard();
 
@@ -30,11 +35,12 @@ public class PacManGame {
         players[3] = new PacManPlayer("P4", boardWidth-1, boardHeight-1);
     }
     
+    // Function to chech if the player collides
     public boolean isCollide(PacManPlayer a, PacManPlayer b){
         return (a.getX() == b.getX() && a.getY() == b.getY());
     }
    
-    
+    // To identify the players who collides
     public PacManPlayer whoCollide(PacManPlayer player){
         for (PacManPlayer p: players){
             if (!(player.getName().equals(p.getName())) && isCollide(player, p)){
@@ -44,47 +50,51 @@ public class PacManGame {
         return null;
     }
     
+    // To check if it collides with other player on every move
     public void checkCollide(PacManPlayer player){
         
         while (whoCollide(player) != null){
             PacManPlayer p = whoCollide(player);
 
             while (isCollide(player, p)){
+                
+                // Randomly generate spots and place the players
                 Random rand = new Random();
                 int x1 = rand.nextInt(board.getWidth());
                 int y1 = rand.nextInt(board.getHeight());
                 p.setPosition(x1, y1);
-                p.updateScore('C');
-//                System.out.println("p1: "+x1+" "+y1);
+                p.updateScore('C');     // Reduce score
 
                 int x2 = rand.nextInt(board.getWidth());
                 int y2 = rand.nextInt(board.getHeight());
                 player.setPosition(x2, y2);
-                player.updateScore('C');
-//                System.out.println("p2: "+x2+" "+y2);
+                player.updateScore('C');    // Reduce score
 
             }
 
         }
     }
     
+    // remove the eat food by the player
     public char eatFood(PacManPlayer player){
         return board.removeDot(player.getX(), player.getY());
     }
     
     
-    
+    // Function to handle the keypress
     public void keyPress(int playerId, char direction){
         
-        
+        // Move player to the given direction
         players[playerId].move(direction, board.getWidth(), board.getHeight());
-        
+        // Check for collision
         checkCollide(players[playerId]);
-        
+        // Eat food along the way
         char color = eatFood(players[playerId]);
+        // Update score according to the color
         players[playerId].updateScore(color);
     }
     
+    // Get current board information. This will output JSON format string
     public String getBoardState(int playerCount){
         
         HashMap<Integer, String> dots = board.getBoard();
@@ -131,6 +141,14 @@ public class PacManGame {
         
         return output;
      
+    }
+    
+    public PacManPlayer[] getPacManGamePlayers(){
+        return players;
+    }
+    
+    public PacManBoard getPacManGameBoard(){
+        return board;
     }
    
 }

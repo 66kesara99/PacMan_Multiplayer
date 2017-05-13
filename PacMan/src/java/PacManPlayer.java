@@ -8,7 +8,10 @@
  *
  * @author Kesara
  */
+
+// Class for pac man player
 public class PacManPlayer {
+    
     private String name;
     private int score;
     private int x;
@@ -47,16 +50,7 @@ public class PacManPlayer {
         return score;
     }
     
-//    public int getPlayerId(PacManPlayer players[], PacManPlayer player){
-//        for (int i = 0; i<players.length; i++){
-//            if (player.getName().equals(players[i].getName())){
-//                return i;
-//            }
-//        }
-//        
-//        return -1;
-//    }
-    
+    // Function to update the position according to the keypress
     public void move(char direction, int width, int height){
         switch (direction){
             case 'U':
@@ -80,7 +74,10 @@ public class PacManPlayer {
         }                
     }
     
+    // Function to update the score
     public void updateScore(char update){
+        
+        // Score is increased by the color dots
         switch (update){
             case 'R':
                 score += 1;
@@ -91,7 +88,7 @@ public class PacManPlayer {
             case 'B':
                 score += 4;
                 break;
-            case 'C':
+            case 'C':       // For collisions
                 score -= 3;
                 break;
             default:

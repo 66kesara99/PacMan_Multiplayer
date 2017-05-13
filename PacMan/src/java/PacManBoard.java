@@ -12,10 +12,14 @@ import java.util.Random;
  *
  * @author Kesara
  */
+
+
+// Class for saving the game board
 public class PacManBoard {
-    private int width;
-    private int height;
-    private HashMap<Integer, String> board;
+    
+    private final int width;
+    private final int height;
+    private final HashMap<Integer, String> board;
     
     public PacManBoard (int width, int height){
         this.width = width;
@@ -31,22 +35,11 @@ public class PacManBoard {
         return width;
     }
     
-    public char removeDot(int x, int y){
-        int key = y*width+x;
-        char colour = 0;
-        if (board.containsKey(key)){
-            String val = board.get(key);
-            if (val.equals("\"R\""))
-                colour = 'R';
-            else if (val.equals("\"G\""))
-                colour = 'G';
-            else if (val.equals("\"B\""))
-                colour = 'B';
-            board.remove(key);
-        }
-        return colour;
+    public HashMap<Integer, String> getBoard(){
+        return board;
     }
     
+    // Function to generate a board with random food
     public void generateBoard(){
         
         for (int i = 0; i<width; i++){
@@ -60,7 +53,7 @@ public class PacManBoard {
                     col = 0;
                 }
                 
-                // If col == 0 board is empty
+                // If col == 0 board is empty othewise it has dots
                 switch (col) {
                     case 1:
                         board.put(j*width+i, "\"R\"");
@@ -79,8 +72,38 @@ public class PacManBoard {
         
     }
     
-    public HashMap<Integer, String> getBoard(){
-        return board;
+    // Function to remove a given food dot and return the repective colour
+    public char removeDot(int x, int y){
+        int key = y*width+x;
+        char colour = 0;
+        if (board.containsKey(key)){
+            String val = board.get(key);
+            if (val.equals("\"R\""))
+                colour = 'R';
+            else if (val.equals("\"G\""))
+                colour = 'G';
+            else if (val.equals("\"B\""))
+                colour = 'B';
+            board.remove(key);
+        }
+        return colour;
+    }
+    
+    //Function to get return the colour of a given dot
+    public char getFoodColour(int x, int y){
+        int key = y * width + x;
+        char colour = 0;
+        if (board.containsKey(key)){
+            String val = board.get(key);
+            if (val.equals("\"R\""))
+                colour = 'R';
+            else if (val.equals("\"G\""))
+                colour = 'G';
+            else if (val.equals("\"B\""))
+                colour = 'B';
+        }
+        return colour;
+        
     }
    
 }

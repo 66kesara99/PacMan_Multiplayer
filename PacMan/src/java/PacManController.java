@@ -23,12 +23,12 @@ import javax.servlet.http.HttpSession;
 @WebServlet(urlPatterns = {"/pacman","/update"})
 public class PacManController extends HttpServlet {
 
-    private PacManGame game = new PacManGame(45, 45);
+    // Initiate the game
+    private final PacManGame game = new PacManGame(45, 45);
     private int playerCount;
 
     @Override
     public void init() {
-//        game.start();
         playerCount = 0;
         Logger.getGlobal().log(Level.INFO, "Game Started");
     }
@@ -43,6 +43,7 @@ public class PacManController extends HttpServlet {
 
         try (PrintWriter out = response.getWriter()) {
             
+            //Sending JSON response
             out.print("data: ");
             out.println(game.getBoardState(playerCount));
             out.println();
@@ -50,10 +51,11 @@ public class PacManController extends HttpServlet {
             
             HttpSession sess = request.getSession(true);        // Get the existing session
         
-            // Get addressbook inside the session
+            // Get player id inside the session
             Integer playerId = (Integer) sess.getAttribute("playerId");
 
             // Create new session if the session is new
+            
             if (playerId == null && playerCount < 4){
                 playerCount++;
                 System.out.println(playerCount);
@@ -62,19 +64,24 @@ public class PacManController extends HttpServlet {
                 }
             }
             
-            while (!Thread.interrupted()){
-                synchronized (this) {
-                    wait();
+            playerId = (Integer) sess.getAttribute("playerId");
+            
+            // Check the player is a valid player
+            if (playerId != null){
+                while (!Thread.interrupted()){
+                    synchronized (this) {
+                        wait();
+                    }
+
+                    out.print("data: ");
+                    out.println(game.getBoardState(playerCount));
+                    out.println();
+
+                    out.flush();
+
                 }
-
-                out.print("data: ");
-                out.println(game.getBoardState(playerCount));
-                out.println();
-
-                out.flush();
-//                    System.out.println(game.getBoardJSON());
-//                    Logger.getGlobal().log(Level.INFO, game.getBoardJSON());
             }
+            
         } catch (InterruptedException e) {
             Logger.getGlobal().log(Level.INFO, "Terminating updates.");
             response.setStatus(HttpServletResponse.SC_GONE);
@@ -88,34 +95,39 @@ public class PacManController extends HttpServlet {
             int key = Integer.parseInt(request.getParameter("keypress"));
             
             //process request parameters and return details of searched name
-        
+            
             HttpSession sess = request.getSession(true);        // Get the existing session
         
             // Get player id inside the session
-            Integer playerId = (Integer) sess.getAttribute("playerId") - 1;
+            Integer playerId = (Integer) sess.getAttribute("playerId");
             
-            synchronized(this){
-                
-                if (playerCount > 3){
-                    switch (key) {
-                        case 37:
-                            game.keyPress(playerId, 'L');
-                            break;
-                        case 38:
-                            game.keyPress(playerId, 'U');
-                            break;
-                        case 39:
-                            game.keyPress(playerId, 'R');
-                            break;
-                        case 40:
-                            game.keyPress(playerId, 'D');
-                            break;
-                        default:
-                            break;
+            if (playerId != null){
+                playerId -= 1;
+                synchronized(this){
+                    // Handle the player according the key press
+                    if (playerCount > 3){
+                        switch (key) {
+                            case 37:
+                                game.keyPress(playerId, 'L');
+                                break;
+                            case 38:
+                                game.keyPress(playerId, 'U');
+                                break;
+                            case 39:
+                                game.keyPress(playerId, 'R');
+                                break;
+                            case 40:
+                                game.keyPress(playerId, 'D');
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
-                notifyAll();
+                    notifyAll();
+                } 
             }
+            
+            
         }
     }
 

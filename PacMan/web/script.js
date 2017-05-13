@@ -19,11 +19,11 @@ var playerCount = response.PLAYERS.length;
 var remPlayers = 4 - playerCount;
 if(playerCount  === 4){
         halt = false;
-        $("#message").html("PLAY NOW!!!!");
+        $("#message").html("PLAY NOW..!!!!");
     }
     else{
         
-        $("#message").html("Press any key and Wait till other "+ remPlayers + " players join");
+        $("#message").html("Press Any Key and Wait Till Other "+ remPlayers + " Players Join");
     }
 
 
